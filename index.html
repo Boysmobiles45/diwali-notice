@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boys Mobiles</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .message {
+            margin-top: 10px;
+        }
+        .error {
+            color: red;
+        }
+        .success {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form method="post" action=" " name="BoysMobiles">
+            <h4>Boys Mobiles</h4>
+            <img src="Boys Mobiles.png" alt="Boys Mobiles Logo">
+            <input type="text" name="Name" placeholder="Name" required>
+            <input type="text" name="Phone" placeholder="Phone" required><br>
+            <input type="submit" value="Submit" id="submit">
+        </form>
+        <div id="message" class="message"></div>
+    </div>
+
+    <script>
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzcTsZp93fZLx3ReG9Xkcp8Nmzi7r522Lb16ZITCguIJaaYjfuP7-x3PnmZs1bgJqCv/exec'; // Replace with your Google Apps Script URL
+        const form = document.forms['BoysMobiles'];
+        const messageDiv = document.getElementById('message');
+
+        form.addEventListener('submit', e => {
+            e.preventDefault(); // Prevent default form submission
+
+            fetch(scriptURL, {
+                method: 'POST',
+                body: new FormData(form)
+            })
+            .then(response => response.json()) // Parse JSON response
+            .then(data => {
+                messageDiv.textContent = data.message;
+                messageDiv.className = 'message ' + (data.result === 'success' ? 'success' : 'error'); // Change class based on result
+                if (data.result === 'success') {
+                    form.reset(); // Clear the form on success
+                }
+            })
+            .catch(error => {
+                console.error('Error!', error.message);
+                messageDiv.textContent = 'An error occurred. Please try again.';
+                messageDiv.className = 'message error';
+            });
+        });
+    </script>
+</body>
+</html>
